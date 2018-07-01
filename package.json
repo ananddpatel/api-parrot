@@ -2,7 +2,7 @@
   "name": "api-parrot",
   "version": "1.0.1",
   "description": "Parrots api response",
-  "main": "parrot.js",
+  "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
