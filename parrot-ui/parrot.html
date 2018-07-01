@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta content="width=device-width,initial-scale=1,minimal-ui" name="viewport">
+    <title>Page Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+        crossorigin="anonymous">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,400italic|Material+Icons">
+    <link rel="stylesheet" href="https://unpkg.com/vue-material@beta/dist/vue-material.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/vue-material@beta/dist/theme/default.css">
+</head>
+
+<body>
+    <div class="container" id="app">
+        <h1 class="text-center">Parrot</h1>
+        <div class="row">
+            <div class="col-9">
+                <md-field>
+                    <label>URL</label>
+                    <md-input v-model="url"></md-input>
+                    <span class="md-helper-text">Url that returns parroted response</span>
+                </md-field>
+
+                <md-field>
+                    <label>Response</label>
+                    <md-textarea v-model="responseToSend"></md-textarea>
+                    <span class="md-helper-text">response object that will be returned</span>
+                </md-field>
+            </div>
+            <div class="col-3 d-flex flex-column">
+                <div class="">
+                    <md-field>
+                        <label>Status Code</label>
+                        <md-input type="number" step="1" v-model.number="statuscode"></md-input>
+                        <span class="md-helper-text">Http status code</span>
+                    </md-field>
+                </div>
+                <div class="mt-auto mb-3">
+                    <md-button class="md-raised md-primary" @click="sendVal()">Send</md-button>
+                </div>
+            </div>
+        </div>
+        <h3 class="mt-3">Cage</h3>
+        <div class="row" v-for="(val, key) in cage">
+            <md-list class="col">
+                <md-list-item md-expand>
+                    <md-chip class="md-primary mr-1">{{val.statusCode}}</md-chip>
+                    <span class="md-list-item-text">{{key}}</span>
+
+                    <md-list slot="md-expand">
+                        <pre class="px-4">{{val.val}}</pre>
+                    </md-list>
+                </md-list-item>
+            </md-list>
+            <div class="col-auto d-flex align-items-center">
+                <md-button class="md-icon-button" @click="editResponse(key)">
+                    <md-icon>edit</md-icon>
+                </md-button>
+                <md-button class="md-icon-button" @click="removeResponseFromCage(key)">
+                    <md-icon>remove_circle_outline</md-icon>
+                </md-button>
+            </div>
+        </div>
+    </div>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="https://unpkg.com/vue-material@beta"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.18.0/axios.min.js"></script>
+    <script>
+        Vue.use(VueMaterial.default)
+        var app = new Vue({
+            el: '#app',
+            data: {
+                url: '',
+                responseToSend: '{}',
+                statuscode: 200,
+                cage: {},
+            },
+            mounted() {
+                axios.get('/parrot/cage').then(d => {
+                    this.cage = d.data
+                })
+            },
+            methods: {
+                sendVal() {
+                    axios.post('/parrot/set', { path: this.url, squawk: JSON.parse(this.responseToSend), statusCode: this.statuscode })
+                        .then(d => this.cage = d.data);
+                },
+                editResponse(key) {
+                    let cageItem = this.cage[key]
+                    this.url = key;
+                    this.responseToSend = JSON.stringify(cageItem.val);
+                    this.statuscode = cageItem.statusCode
+                },
+                removeResponseFromCage(key) {
+                    console.log(key);
+                    let cageItem = this.cage[key]
+                    axios.post('/parrot/clean', { path: key })
+                        .then(d => { console.log(d); this.cage = d.data });
+                }
+            },
+        });
+    </script>
+
+</body>
+
+</html>

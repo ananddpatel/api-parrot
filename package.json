@@ -1,0 +1,14 @@
+{
+  "name": "api-parrot",
+  "version": "1.0.1",
+  "description": "Parrots api response",
+  "main": "parrot.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Anand Patel",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.18.3"
+  }
+}
