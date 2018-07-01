@@ -88,7 +88,7 @@
             },
             methods: {
                 sendVal() {
-                    axios.post('/parrot/set', { path: this.url, squawk: JSON.parse(this.responseToSend), statusCode: this.statuscode })
+                    axios.post('/parrot/set', { route: this.url, squawk: JSON.parse(this.responseToSend), statusCode: this.statuscode })
                         .then(d => this.cage = d.data);
                 },
                 editResponse(key) {
@@ -100,7 +100,7 @@
                 removeResponseFromCage(key) {
                     console.log(key);
                     let cageItem = this.cage[key]
-                    axios.post('/parrot/clean', { path: key })
+                    axios.post('/parrot/clean', { route: key })
                         .then(d => { console.log(d); this.cage = d.data });
                 }
             },
