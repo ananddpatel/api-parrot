@@ -1,8 +1,6 @@
-# Api-Parrot 
+# Parrot - API Mocking middleware for Express js
 
-## Api Mocking middleware for Express js
-
-### Use case
+## Use case
 Mocking APIs is time consuming, repeating lines of code that do the same thing to pass responses. Deploying mock environments every time a change needs to be made on a moments notice takes time and disrupts the development workflow.
 
 Parrot can be used alongside your API service or creating a seperate service solely for mocking. Parrot simplifies the entire mocking process this with just **TWO** lines of code and absolutely **ZERO** lines of code changes to the rest of your service.
@@ -12,7 +10,7 @@ Parrot can be used alongside your API service or creating a seperate service sol
 2 app.use(Parrot)
 ```
 
-### Features
+## Features
 
 * Parrot provides a simple and intuitive web UI that can be accessed through `https://example.com/parrot`
 * Parrot accepts a URL, the JSON response, and a HTTP status code to mock.
@@ -23,7 +21,7 @@ Parrot can be used alongside your API service or creating a seperate service sol
 * Group caged responses under a common alias
 * Release/Disable caged responses after a certain time.
 
-### What Parrot does better
+## What Parrot does better
 * Web interface
 * Zero code changes
 * Developer independent changes
