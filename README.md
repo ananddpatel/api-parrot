@@ -19,6 +19,8 @@ $ npm install --save api-parrot
 4| app.listen(3000);
 ```
 
+Go to `http://localhost:3000/parrot`
+
 ## Features
 
 - Parrot provides a simple and intuitive web UI that can be accessed through `https://example.com/parrot`
