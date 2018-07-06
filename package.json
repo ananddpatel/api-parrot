@@ -1,6 +1,6 @@
 {
   "name": "api-parrot",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Parrots api response",
   "main": "index.js",
   "scripts": {
