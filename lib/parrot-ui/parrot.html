@@ -7,16 +7,99 @@
     <meta content="width=device-width,initial-scale=1,minimal-ui" name="viewport">
     <title>Parrot UI</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4"
         crossorigin="anonymous">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,400italic|Material+Icons">
+    <link href="https://fonts.googleapis.com/css?family=Knewave" rel="stylesheet">
     <link rel="stylesheet" href="https://unpkg.com/vue-material@beta/dist/vue-material.min.css">
     <link rel="stylesheet" href="https://unpkg.com/vue-material@beta/dist/theme/default.css">
+    <style>
+        body {
+            background-color: #314053;
+        }
+
+        #app {
+            height: 100vh;
+        }
+
+        pre {
+            white-space: pre-wrap;
+        }
+
+        .groups {
+            background-color: #3a495c;
+        }
+
+        .cage {
+            background-color: #2f818f
+        }
+
+        .main {
+            background-color: #314053;
+        }
+
+        header {
+            padding: 0.5rem;
+            font-size: 1.5rem;
+            color: white;
+            font-family: 'Knewave', cursive;
+        }
+
+        .wh100 {
+            height: 100vh;
+        }
+
+        .groups-title {
+            /* color: #91dfe9 */
+            /* color: #979ea8; */
+            color: white;
+        }
+
+        .group {
+            color: #84d8c1;
+            font-weight: 500;
+        }
+
+        .group.active {
+            background-color: #314053;
+        }
+
+        .url-alias {
+            color: #fec777
+        }
+
+        .cage-url {
+            color: #f2eee3
+        }
+    </style>
 </head>
 
 <body>
-    <div class="container" id="app">
-        <h1 class="text-center">Parrot</h1>
+    <div class="container-fluid" id="app">
+        <div class="row">
+            <header class="text-center col-12">
+                <span>Parrot</span>
+            </header>
+        </div>
+        <div class="row">
+            <div class="col-1 groups px-0">
+                <div class="d-flex flex-column">
+                    <strong class="text-center my-3 groups-title">Groups</strong>
+                    <div class="group px-1 py-2" v-for="g in groups">{{g}}</div>
+                </div>
+            </div>
+            <div class="col-8 main"></div>
+            <div class="col-3 cage px-0">
+                <div class="d-flex flex-column">
+                    <div class="px-1 py-2" v-for="(val, key) in cage">
+                        <p class="m-0 url-alias">{{val.alias}}</p>
+                        <p class="cage-url">{{key}}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- <h1 class="text-center">Parrot</h1>
         <div class="row">
             <div class="col-9">
                 <md-field>
@@ -64,7 +147,7 @@
                     <md-icon>remove_circle_outline</md-icon>
                 </md-button>
             </div>
-        </div>
+        </div> -->
     </div>
 
 
@@ -88,7 +171,11 @@
             },
             methods: {
                 sendVal() {
-                    axios.post('/parrot/set', { route: this.url, squawk: JSON.parse(this.responseToSend), statusCode: this.statuscode })
+                    axios.post('/parrot/set', {
+                        route: this.url, squawk: JSON.parse(this.responseToSend), options: {
+                            statusCode: this.statuscode
+                        }
+                    })
                         .then(d => this.cage = d.data);
                 },
                 editResponse(key) {
@@ -104,6 +191,19 @@
                         .then(d => { console.log(d); this.cage = d.data });
                 }
             },
+            computed: {
+                groups() {
+                    let keys = Object.keys(this.cage);
+                    let _groups = [];
+                    keys.forEach(k => {
+                        let g = this.cage[k].group || 'Recent';
+                        if (!_groups.includes(g)) {
+                            _groups.push(g)
+                        }
+                    })
+                    return _groups;
+                }
+            }
         });
     </script>
 
