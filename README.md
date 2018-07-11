@@ -2,9 +2,11 @@
 
 ## Use case
 
-Mocking APIs is time consuming, repeating lines of code that do the same thing to pass responses. Deploying mock environments every time a change needs to be made on a moments notice takes time and disrupts the development workflow.
+One of the biggest hurdles in testing how an API responds to your requests is the need to create a mock response. This is a lengthy and cumbersome process which involves creating a copy of the API in a separate environment and then feeding it relevant fake data to respond to your API call. Multiple teams have to be engaged to complete the task of testing an API, this process obviously adds too much of an overhead to a rather simple/routine QA task.
 
-Parrot can be used alongside your API service or creating a seperate service solely for mocking. Parrot simplifies the entire mocking process this with just **TWO** lines of code and absolutely **ZERO** lines of code changes to the rest of your service.
+Parrot has been developed to specifically address this issue, it can be used alongside your existing API service without any changes. Parrot simplifies the entire process and accomplishes the end goal with just **2** lines of code and absolutely **zero** changes to any other part of your API/service.
+
+It is a highly simplified and efficient solution to a problem that has been bothering QA and Developers alike.
 
 ## Getting started
 
