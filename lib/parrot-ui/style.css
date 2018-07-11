@@ -1,0 +1,58 @@
+body {
+  background-color: #314053;
+  overflow: hidden;
+}
+
+#app {
+  height: 100vh;
+}
+
+pre {
+  white-space: pre-wrap;
+}
+
+.groups {
+  background-color: #3a495c;
+}
+
+.cage {
+  background-color: #2f818f;
+}
+
+.main {
+  background-color: #314053;
+}
+
+header {
+  padding: 0.5rem;
+  font-size: 1.5rem;
+  color: white;
+  font-family: 'Knewave', cursive;
+}
+
+.wh100 {
+  height: 100vh;
+}
+
+.groups-title {
+  /* color: #91dfe9 */
+  /* color: #979ea8; */
+  color: white;
+}
+
+.group {
+  color: #84d8c1;
+  font-weight: 500;
+}
+
+.group.active {
+  background-color: #314053;
+}
+
+.url-alias {
+  color: #fec777;
+}
+
+.cage-url {
+  color: #f2eee3;
+}
