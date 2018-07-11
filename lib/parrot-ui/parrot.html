@@ -13,65 +13,7 @@
     <link href="https://fonts.googleapis.com/css?family=Knewave" rel="stylesheet">
     <link rel="stylesheet" href="https://unpkg.com/vue-material@beta/dist/vue-material.min.css">
     <link rel="stylesheet" href="https://unpkg.com/vue-material@beta/dist/theme/default.css">
-    <style>
-        body {
-            background-color: #314053;
-        }
-
-        #app {
-            height: 100vh;
-        }
-
-        pre {
-            white-space: pre-wrap;
-        }
-
-        .groups {
-            background-color: #3a495c;
-        }
-
-        .cage {
-            background-color: #2f818f
-        }
-
-        .main {
-            background-color: #314053;
-        }
-
-        header {
-            padding: 0.5rem;
-            font-size: 1.5rem;
-            color: white;
-            font-family: 'Knewave', cursive;
-        }
-
-        .wh100 {
-            height: 100vh;
-        }
-
-        .groups-title {
-            /* color: #91dfe9 */
-            /* color: #979ea8; */
-            color: white;
-        }
-
-        .group {
-            color: #84d8c1;
-            font-weight: 500;
-        }
-
-        .group.active {
-            background-color: #314053;
-        }
-
-        .url-alias {
-            color: #fec777
-        }
-
-        .cage-url {
-            color: #f2eee3
-        }
-    </style>
+    <link rel="stylesheet" href="./style.css">
 </head>
 
 <body>
@@ -81,19 +23,30 @@
                 <span>Parrot</span>
             </header>
         </div>
-        <div class="row">
+        <div class="row h-100">
             <div class="col-1 groups px-0">
                 <div class="d-flex flex-column">
                     <strong class="text-center my-3 groups-title">Groups</strong>
-                    <div class="group px-1 py-2" v-for="g in groups">{{g}}</div>
+                    <div @click="selectGroup(g, $event)" class="group px-1 py-2" :class="{'active': g.selected}" v-for="g in groups">{{g.name}}</div>
                 </div>
             </div>
-            <div class="col-8 main"></div>
+            <div class="col-8 main">
+                <!-- <textarea name="selectedRes" id="" cols="30" rows="10"> -->
+                <code v-if="selectedRes">{{selectedRes.val}}</code>
+                <!-- <md-field v-if="selectedRes">
+                    <label>Response</label>
+                    <md-textarea>{{selectedRes.val}}</md-textarea>
+                    <span class="md-helper-text">response object that will be returned</span>
+                </md-field> -->
+                <!-- </textarea> -->
+            </div>
             <div class="col-3 cage px-0">
                 <div class="d-flex flex-column">
-                    <div class="px-1 py-2" v-for="(val, key) in cage">
-                        <p class="m-0 url-alias">{{val.alias}}</p>
-                        <p class="cage-url">{{key}}</p>
+                    <div class="px-1 py-2" v-if="selectedGroup && val.group === selectedGroup.name" v-for="(val, key) in cage">
+                        <div @click="selectCageRes(key, $event)">
+                            <p class="m-0 url-alias">{{val.alias}}</p>
+                            <p class="cage-url">{{key}}</p>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -150,10 +103,10 @@
         </div> -->
     </div>
 
-
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
     <script src="https://unpkg.com/vue-material@beta"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.18.0/axios.min.js"></script>
+    <script src="./transformer.js"></script>
     <script>
         Vue.use(VueMaterial.default)
         var app = new Vue({
@@ -163,10 +116,13 @@
                 responseToSend: '{}',
                 statuscode: 200,
                 cage: {},
+                groups: [],
+                selectedGroup: null,
+                selectedRes: null
             },
             mounted() {
                 axios.get('/parrot/cage').then(d => {
-                    this.cage = d.data
+                    this.onGetCageSuccess(d.data)
                 })
             },
             methods: {
@@ -189,21 +145,43 @@
                     let cageItem = this.cage[key]
                     axios.post('/parrot/clean', { route: key })
                         .then(d => { console.log(d); this.cage = d.data });
-                }
-            },
-            computed: {
-                groups() {
+                },
+                setGroups() {
                     let keys = Object.keys(this.cage);
                     let _groups = [];
-                    keys.forEach(k => {
-                        let g = this.cage[k].group || 'Recent';
-                        if (!_groups.includes(g)) {
-                            _groups.push(g)
+                    keys.forEach(key => {
+                        let name = this.cage[key].group;
+                        if (!_groups.find((item) => item.name === name)) {
+                            let groupItem = { selected: false, name: this.cage[key].group };
+                            _groups.push(groupItem)
                         }
                     })
-                    return _groups;
+                    _groups[0].selected = true;
+                    this.selectGroup(_groups[0]);
+                    this.groups = _groups;
+                },
+                selectGroup(group, $event) {
+                    if ($event) {
+                        $event.preventDefault();
+                        $event.stopPropagation();
+                    }
+                    this.groups.forEach(g => {
+                        g.selected = false;
+                    })
+                    group.selected = true;
+                    this.selectedGroup = group;
+                },
+                selectCageRes(resUrlKey, $event) {
+                    if ($event) {
+                        $event.preventDefault();
+                    }
+                    this.selectedRes = this.cage[resUrlKey]
+                },
+                onGetCageSuccess(data) {
+                    this.cage = cageTransformer(data);
+                    this.setGroups();
                 }
-            }
+            },
         });
     </script>
 
