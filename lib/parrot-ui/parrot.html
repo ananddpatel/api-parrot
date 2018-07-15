@@ -31,18 +31,12 @@
                 </div>
             </div>
             <div class="col-8 main">
-                <!-- <textarea name="selectedRes" id="" cols="30" rows="10"> -->
-                <code v-if="selectedRes">{{selectedRes.val}}</code>
-                <!-- <md-field v-if="selectedRes">
-                    <label>Response</label>
-                    <md-textarea>{{selectedRes.val}}</md-textarea>
-                    <span class="md-helper-text">response object that will be returned</span>
-                </md-field> -->
-                <!-- </textarea> -->
+                <h4 class="text-truncate" v-if="selectedRes">{{selectedRes.alias}}</h4>
+                <textarea class="form-control" v-if="selectedRes">{{selectedRes.val}}</textarea>
             </div>
             <div class="col-3 cage px-0">
                 <div class="d-flex flex-column">
-                    <div class="px-1 py-2" v-if="selectedGroup && val.group === selectedGroup.name" v-for="(val, key) in cage">
+                    <div class="px-1 py-2 wrap cage-item" v-if="selectedGroup && val.group === selectedGroup.name" v-for="(val, key) in cage">
                         <div @click="selectCageRes(key, $event)">
                             <p class="m-0 url-alias">{{val.alias}}</p>
                             <p class="cage-url">{{key}}</p>
@@ -166,10 +160,12 @@
                         $event.stopPropagation();
                     }
                     this.groups.forEach(g => {
-                        g.selected = false;
+                        g.selected = g.name === group.name ? true : false;
                     })
-                    group.selected = true;
                     this.selectedGroup = group;
+                    // select the first response in the group
+                    this.selectCageRes(this.urlsInGroup(group.name)[0])
+
                 },
                 selectCageRes(resUrlKey, $event) {
                     if ($event) {
@@ -180,8 +176,18 @@
                 onGetCageSuccess(data) {
                     this.cage = cageTransformer(data);
                     this.setGroups();
+                },
+                urlsInGroup(group) {
+                    return this.cageUrls.filter(url => {
+                        return this.cage[url].group === group
+                    });
                 }
             },
+            computed: {
+                cageUrls() {
+                    return Object.keys(this.cage);
+                }
+            }
         });
     </script>
 

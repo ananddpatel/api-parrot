@@ -43,16 +43,30 @@ header {
 .group {
   color: #84d8c1;
   font-weight: 500;
+  cursor: pointer;
 }
 
 .group.active {
   background-color: #314053;
+  color: white;
 }
 
 .url-alias {
   color: #fec777;
 }
 
+.cage-item {
+  cursor: pointer;
+}
+
 .cage-url {
   color: #f2eee3;
+}
+
+.wrap {
+  word-break: break-all;
+}
+
+textarea {
+  min-height: 20rem;
 }
