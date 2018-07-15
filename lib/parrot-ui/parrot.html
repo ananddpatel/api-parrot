@@ -166,9 +166,9 @@
                         $event.stopPropagation();
                     }
                     this.groups.forEach(g => {
-                        g.selected = false;
+                        g.selected = g.name === group.name ? true : false;
                     })
-                    group.selected = true;
+                    // group.selected = true;
                     this.selectedGroup = group;
                 },
                 selectCageRes(resUrlKey, $event) {
