@@ -10,9 +10,11 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4"
         crossorigin="anonymous">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,400italic|Material+Icons">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans|Source+Sans+Pro" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Oxygen" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Knewave" rel="stylesheet">
-    <link rel="stylesheet" href="https://unpkg.com/vue-material@beta/dist/vue-material.min.css">
-    <link rel="stylesheet" href="https://unpkg.com/vue-material@beta/dist/theme/default.css">
+    <!-- <link rel="stylesheet" href="https://unpkg.com/vue-material@beta/dist/vue-material.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/vue-material@beta/dist/theme/default.css"> -->
     <link rel="stylesheet" href="./style.css">
 </head>
 
@@ -27,16 +29,24 @@
             <div class="col-1 groups px-0">
                 <div class="d-flex flex-column">
                     <strong class="text-center my-3 groups-title">Groups</strong>
-                    <div @click="selectGroup(g, $event)" class="group px-1 py-2" :class="{'active': g.selected}" v-for="g in groups">{{g.name}}</div>
+                    <div @click="selectGroup(g, $event)" class="group px-3 py-2" :class="{'active': g.selected}" v-for="g in groups">{{g.name}}</div>
                 </div>
             </div>
             <div class="col-8 main">
-                <h4 class="text-truncate" v-if="selectedRes">{{selectedRes.alias}}</h4>
-                <textarea class="form-control" v-if="selectedRes">{{selectedRes.val}}</textarea>
+                <div v-if="selectedRes">
+                    <h4 class="text-truncate" v-if="selectedRes">{{selectedRes.alias}}</h4>
+                    <!-- <input type="text" class="form-control" :value="selectedRes.alias"> -->
+                    <p>{{url}}</p>
+                    <textarea class="form-control response-editor">{{selectedRes.val}}</textarea>
+                    <div class="d-flex">
+                        <input name="save-btn" id="save-btn" class="ml-auto my-2 px-5 btn btn-secondary" type="button" value="Save">
+                    </div>
+                </div>
             </div>
             <div class="col-3 cage px-0">
                 <div class="d-flex flex-column">
-                    <div class="px-1 py-2 wrap cage-item" v-if="selectedGroup && val.group === selectedGroup.name" v-for="(val, key) in cage">
+                    <input name="add" id="add" class="m-3 btn btn-secondary" type="button" value="Add">
+                    <div class="px-3 py-2 wrap cage-item" v-if="selectedGroup && val.group === selectedGroup.name" v-for="(val, key) in cage">
                         <div @click="selectCageRes(key, $event)">
                             <p class="m-0 url-alias">{{val.alias}}</p>
                             <p class="cage-url">{{key}}</p>
@@ -171,7 +181,8 @@
                     if ($event) {
                         $event.preventDefault();
                     }
-                    this.selectedRes = this.cage[resUrlKey]
+                    this.url = resUrlKey;
+                    this.selectedRes = this.cage[resUrlKey];
                 },
                 onGetCageSuccess(data) {
                     this.cage = cageTransformer(data);
